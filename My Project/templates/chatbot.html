@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis Chatbot</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f9; color: #333; margin: 0; padding: 20px;">
+    <div style="max-width: 600px; margin: 0 auto; padding: 20px; border-radius: 8px; background: white; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+        <h1 style="text-align: center; color: #4A90E2;">Sentiment Analysis Chatbot with Explanation</h1>
+        <div style="margin-bottom: 20px;">
+            <input type="text" id="user_input" placeholder="Enter your comment" style="width: calc(100% - 110px); padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+            <button onclick="getSentiment()" style="padding: 10px; border: none; background-color: #4A90E2; color: white; border-radius: 4px; cursor: pointer;">Submit</button>
+        </div>
+        <p id="sentiment" style="margin: 10px 0; padding: 10px; background-color: #f0f8ff; border: 1px solid #4A90E2; border-radius: 4px;"></p>
+        <p id="explanation" style="margin: 10px 0; padding: 10px; background-color: #f0f8ff; border: 1px solid #4A90E2; border-radius: 4px;"></p>
+        <div style="margin-top: 20px;">
+            <h2>Translate Comment</h2>
+            <input type="text" id="translation_input" placeholder="Enter comment to translate" style="width: calc(100% - 110px); padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+            <select id="language" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                <option value="en">English</option>
+                <option value="fr">French</option>
+                <option value="es">Spanish</option>
+                <option value="zh-cn">Chinese</option>
+            </select>
+            <button onclick="translateComment()" style="padding: 10px; border: none; background-color: #4A90E2; color: white; border-radius: 4px; cursor: pointer;">Translate</button>
+            <p id="translation_response" style="margin: 10px 0; padding: 10px; background-color: #f0f8ff; border: 1px solid #4A90E2; border-radius: 4px;"></p>
+        </div>
+    </div>
+
+    <script>
+        function getSentiment() {
+            let comment = $("#user_input").val();
+            $.ajax({
+                type: 'POST',
+                url: '/predict',
+                data: { comment: comment },
+                success: function(response) {
+                    $("#sentiment").html("Sentiment: " + response.sentiment);
+                    $("#explanation").html("Explanation: " + response.explanation);
+                }
+            });
+        }
+        function translateComment() {
+            let comment = $("#translation_input").val();
+            let language = $("#language").val();
+            $.ajax({
+                type: 'POST',
+                url: '/translate',
+                data: { comment: comment, language: language },
+                success: function(response) {
+                    $("#translation_response").html("Translation: " + response.translation);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
